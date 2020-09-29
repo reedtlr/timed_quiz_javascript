@@ -7,9 +7,14 @@ var results = document.querySelector(".results");
 // tracking the question number in quizQuestion array
 var questionNumber = 0;
 
+// tracking time for quiz in seconds
+var secondsLeft = 90;
+
 var answersCorrect = 0; 
 var answersIncorrect = 0;
 
+// create header
+var headerEl = document.createElement("h2");
 
 // quiz questions organized as an array of objects 
 quizQuestions = [
@@ -40,8 +45,7 @@ submitButton.addEventListener('click', startQuiz);
 
 function startQuiz(event) {
     event.preventDefault();
-    startClock();
-    runQuiz();
+    getReady();
 
 }
 
@@ -58,19 +62,24 @@ function runQuiz() {
         choice.setAttribute("style", "margin:auto; width:30%; text-align:center;");
         choice.setAttribute("value", currentQuestion.choices[i]);
         choice.textContent = currentQuestion.choices[i];
+        var answerC = currentQuestion.answer[i]
         choice.onclick = userClick
         quizDisplay.append(choice)
     }
-    function userClick(choice, answer) {
-        if (choice.value != currentQuestion.answer) {
+ 
+    function userClick(choice) {
+        var element = choice.target
+        console.log("element", element)
+        console.log("current answer", currentQuestion.answer)
+        if (element.textContent != currentQuestion.answer) {
+            secondsLeft = secondsLeft - 5
             answersIncorrect++
-            timeDisplay = timeDisplay - 5
             questionNumber++
-            console.log(answer, questionNumber,)
+            console.log("Question No", questionNumber)
         } else {
             answersCorrect++
             questionNumber++
-            console.log(answersCorrect, questionNumber)
+            console.log("correct", answersCorrect, "Question No", questionNumber)
         }
         
         document.querySelector(".quizBox").innerHTML = "";
@@ -80,9 +89,6 @@ function runQuiz() {
         } else {
             runQuiz(questionNumber)
         }
-        // use a conditional to compare click value to current quesiton answer value, if wrong take away time, if right move on, empty div 
-        // at end , if current question no ==== quizQuestions.length then end quiz or run quiz again - quiz display .empty look up w3schools 
-        // quizDisplay.innerHTML("") 
     }
      
 
@@ -90,42 +96,156 @@ function runQuiz() {
 
 
 function endQuiz() {
-    
+   
     var timeDisplay = document.querySelector(".timeDisplay")
-    var score = timeDisplay.textContent
-    localStorage.setItem("endTime", score)
+    var inputs = secondsLeft
+    
+    var values = JSON.parse(localStorage.getItem('scoreStore') || '{}');
+    var inputs = document.getElementsByName("scoreStore")
 
+    for (let i = 0; i < inputs.length; i++) {
+        var x = inputs[i];
+        x.value = values[i] || '';// stored value if it exists or empty string
+    
+        x.onchange = function() {
+          // assign value to the object above
+          values[i] = this.value;
+          // store updated version of object
+          localStorage.setItem('scoreStore', JSON.stringify(values));
+        }
+      }
+      
     var initials = prompt("Enter your initials to record your highscore")
-    localStorage.setItem("initials", initials)
+    var inputs1 = initials
+    var values1 = JSON.parse(localStorage.getItem('initialsStore') || '{}');
+    var inputs1 = document.getElementsByName("initialsStore")
+
+    for (let i = 0; i < inputs1.length; i++) {
+        var x = inputs1[i];
+        x.value = values1[i] || '';// stored value if it exists or empty string
+    
+        x.onchange = function() {
+          // assign value to the object above
+          values1[i] = this.value;
+          // store updated version of object
+          localStorage.setItem('initialsStore', JSON.stringify(values1));
+        }
+      }
+      
+
+
     document.querySelector(".quizBox").innerHTML = "";
     document.querySelector(".timeDisplay").innerHTML = "Time:";
-    document.querySelector(".quizBox").innerHTML = "The highscores are: " + localStorage.getItem("initials") + " with a " + localStorage.getItem("endTime")
+    hideClock() 
+
+    var h2 = document.createElement("h2")
+    h2.textContent = "The highscores are: " 
+    h2.setAttribute("class", "card-title justify-content-center")
+    h2.setAttribute("style", "margin:auto; text-align:center;")
+    quizDisplay.appendChild(h2)
+
+    var ul = document.createElement("ul")
+    ul.setAttribute("style", "margin:auto; width:70%; text-align:center;")
+    ul.setAttribute("class", "scoreList card-body justify-content-center")
+    quizDisplay.appendChild(ul)
+    
+    var li = document.createElement("li")
+    li.textContent = localStorage.getItem("initialsStore") + " with a score of " + localStorage.getItem("scoreStore")
+    li.setAttribute("style", "margin:auto; width:70%; text-align:center;")
+    quizDisplay.appendChild(li)
+    
+   
+// first attempt at a for loop for rendering highscores 
+    // for (var i = 0; i < score.length; i++) {
+    //     var li = document.createElement("li")
+    //     var currentScore = storedInitials[i] + " with a score of " + storedScore[i]
+    //     li.textContent = currentScore
+    //     li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
+    //     document.querySelector(".scoreList").appendChild(li)
+    
+    // }
+    
 
 }
 
+// message before quiz starts 
+function getReady() {
+    var timeLeft = 2;
+    hideSubmit()
+    headerEl.textContent = "You have 90 seconds to complete this quiz. The faster you complete the quiz, the higher your score."
+    headerEl.setAttribute("style", "margin:auto; width:50%; text-align:center;")
+    quizDisplay.append(headerEl)
+
+    var timeInterval = setInterval(function() {
+      timeDisplay.textContent = timeLeft + " seconds remaining";
+      timeLeft--;
+  
+      if (timeLeft === 0) {
+        timeDisplay.textContent = "";
+        clearInterval(timeInterval);
+        runQuiz();
+        startClock();
+        headerEl.textContent = ""
+       
+      }
+  
+    }, 1000);
+  }
 
 // timer display funciton for quiz 
-function startTimer(duration, timeDisplay) {
-    var timer = duration, minutes, seconds;
-    setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        timeDisplay.textContent = "Time: " + minutes + ":" + seconds;
-
-        if (--timer < 0) {
-            timer = duration;
-        }
-    }, 1000);
-}
-
-
-//  countdown function for quiz 
 function startClock() {
-    var fiveMinutes = 60 * 1.5,
-        timeDisplay = document.querySelector('.timeDisplay');
-    startTimer(fiveMinutes, timeDisplay);
-};
+    var timerInterval = setInterval(function() {
+      secondsLeft--;
+      timeDisplay.textContent = "Time: " + secondsLeft + " seconds remaining";
+  
+      if(secondsLeft === 0) {
+        endQuiz();
+        clearInterval(timerInterval);
+      }
+  
+    }, 1000);
+  }
+
+//  function to hide submit button durring the quiz 
+function hideSubmit() {
+    var x = document.querySelector(".submitBtn");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function hideClock() {
+    var x = document.querySelector(".timeDisplay");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function showHigh() {
+
+        var timeDisplay = document.querySelector(".timeDisplay")
+        document.querySelector(".quizBox").innerHTML = "";
+        document.querySelector(".timeDisplay").innerHTML = "Time:";
+        hideClock() 
+        hideSubmit()
+        var h2 = document.createElement("h2")
+        h2.textContent = "The highscores are: " 
+        h2.setAttribute("class", "card-title justify-content-center")
+        h2.setAttribute("style", "margin:auto; text-align:center;")
+        quizDisplay.appendChild(h2)
+    
+        var ul = document.createElement("ul")
+        ul.setAttribute("style", "margin:auto; width:70%; text-align:center;")
+        ul.setAttribute("class", "scoreList card-body justify-content-center")
+        quizDisplay.appendChild(ul)
+        
+        var li = document.createElement("li")
+        li.textContent = localStorage.getItem("initials") + " with a score of " + localStorage.getItem("endTime")
+        li.setAttribute("style", "margin:auto; width:70%; text-align:center;")
+        quizDisplay.appendChild(li)
+    
+  }
