@@ -158,8 +158,6 @@ function runQuiz() {
     // fuction for what happens when the user clicks on an answer
     function userClick(choice) {
         var element = choice.target
-        console.log("element", element)
-        console.log("current answer", currentQuestion.answer)
         if (element.textContent != currentQuestion.answer) {
             secondsLeft = secondsLeft - 5
             answersIncorrect++
@@ -193,7 +191,7 @@ function endQuiz() {
 
     var initials = prompt("Enter your initials to record your highscore")
     var userScore = { score: inputs + answersCorrect, initials: initials}
-    console.log(userScore)
+    alert("Your score is " + userScore.score + " and your initials are recored as " + userScore.initials )
     values.push(userScore)
     window.localStorage.setItem("scoreStore", JSON.stringify(values));
   
@@ -213,18 +211,20 @@ function endQuiz() {
     ul.setAttribute("class", "scoreList card-body justify-content-center")
     quizDisplay.appendChild(ul)
     
-    // recall results from localstorage to run through loop 
+    //  recall results and sort in decending order by score
     var results = JSON.parse(localStorage.getItem('scoreStore'));
-// for loop for rendering highscores 
-    for (var i = 0; i < results.length; i++) {
+    var resultsSorted = results.sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    // for loop for rendering highscores 
+    for (var i = 0; i < resultsSorted.length; i++) {
         var li = document.createElement("li")
-        var currentScore = "The score of " + results[i].score + " was achieved by " + results[i].initials 
+        var currentScore = "The score of " + resultsSorted[i].score + " was achieved by " + resultsSorted[i].initials 
         li.innerHTML = currentScore
-        console.log(currentScore, "currentScore")
         li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
         document.querySelector(".scoreList").appendChild(li)
     }
-    
 
 }
 
@@ -313,14 +313,17 @@ function hideSubmit() {
         ul.setAttribute("class", "scoreList card-body justify-content-center")
         quizDisplay.appendChild(ul)
         
-        //  recall results from local storage 
+        //  recall results and sort in decending order by score
         var results = JSON.parse(localStorage.getItem('scoreStore'));
+        var resultsSorted = results.sort(function (a, b) {
+          return b.score - a.score;
+        });
+
         // for loop for rendering highscores 
-            for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < resultsSorted.length; i++) {
                 var li = document.createElement("li")
-                var currentScore = "The score of " + results[i].score + " was achieved by " + results[i].initials 
+                var currentScore = "The score of " + resultsSorted[i].score + " was achieved by " + resultsSorted[i].initials 
                 li.innerHTML = currentScore
-                console.log(currentScore, "currentScore")
                 li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
                 document.querySelector(".scoreList").appendChild(li)
             }
