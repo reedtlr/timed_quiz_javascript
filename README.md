@@ -13,4 +13,9 @@ This is a quiz written in vanilla javascript with a count down clock, a 5 second
 ## Technologies
 Project is created with:
 * HTML5, CSS3, Javascript
+
+## Sources
+Several of the quiz questions originate from the following blog (http://mcqspdfs.blogspot.com/2013/08/60-top-javascript-multiple-choice.html).
+
+
 ![Image of the website](https://reedtlr.github.io/timed_quiz_javascript/assets/demo.png)

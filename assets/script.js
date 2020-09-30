@@ -73,7 +73,57 @@ quizQuestions = [
             'var txt = new Array="tim","kim","jim"',
         ],
         answer: 'var txt = new Array(1:"tim",2:"kim",3:"jim")'
-    }
+    },
+    {
+      title: "Which of the following best describes JavaScript?",
+      choices: [
+        "a low-level programming language",
+        "a scripting language precompiled in the browser",
+        "a compiled scripting language",
+        "an object-oriented scripting language",
+      ],
+      answer: "an object-oriented scripting language",
+    },
+    {
+      title: "______method evaluates a string of JavaScript code in the context of the specified",
+      choices: [
+        "Eval",
+        "ParseInt",
+        "ParseFloat",
+        "Efloat",
+      ],
+      answer: "Eval",
+    },
+    [
+      title: "Using _______ statement is how you test for a specific condition.",
+      choices: [
+        "Select",
+        "If",
+        "Switch",
+        "For",
+      ],
+      answer: "If",
+    ],
+    [
+      title: "Which of the following is the structure of an if statement?",
+      choices: [
+        "if (conditional expression is true) thenexecute this codeend if",
+        "if (conditional expression is true)execute this codeend if",
+        "if (conditional expression is true)   {then execute this code>->}",
+        "if (conditional expression is true) then {execute this code}",
+      ],
+      answer: "if (conditional expression is true)   {then execute this code>->}",
+    ],
+    {
+      title: "How to create a Date object in JavaScript?",
+      choices: [
+        "dateObjectName = new Date([parameters])",
+        "dateObjectName.new Date([parameters])",
+        "dateObjectName := new Date([parameters])",
+        "dateObjectName Date([parameters]",
+      ],
+      answer: "dateObjectName = new Date([parameters])",
+    },
 ]
 
 // starts the quiz
