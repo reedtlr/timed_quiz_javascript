@@ -1,7 +1,12 @@
+// highscore button in navabr
 var highscoreDisplay = document.querySelector(".highscoreCount");
+// countdown clock in navbar
 var timeDisplay = document.querySelector(".timeDisplay");
+// main quiz body
 var quizDisplay = document.querySelector(".quizBox");
+// submit button to start quiz
 var submitButton = document.querySelector(".submitBtn");
+// results section for displaying highscores 
 var results = document.querySelector(".results");
  
 // tracking the question number in quizQuestion array
@@ -10,6 +15,7 @@ var questionNumber = 0;
 // tracking time for quiz in seconds
 var secondsLeft = 90;
 
+// records number of correct and incorrect questions answered 
 var answersCorrect = 0; 
 var answersIncorrect = 0;
 
@@ -38,18 +44,50 @@ quizQuestions = [
     ],
     answer: 'alert("Gotta love Javascript")'
     },
+    {
+    title: "What are variables used for in JavaScript Programs?",
+    choices: [
+    "Storing numbers, dates, or other values",
+    "Varying randomly",
+    "Causing high-school algebra flashbacks",
+    "None of the above",
+    ],
+    answer: "Storing numbers, dates, or other values"
+    },
+    {
+        title: "Which of the following is not a valid JavaScript variable name?",
+        choices: [
+    "2names",
+    "_first_and_last_names",
+    "FirstAndLast",
+    "None of the above",
+        ],
+        answer: "2names"
+    },
+    {
+        title: "Which is the correct way to write a JavaScript array?",
+        choices: [
+            'var txt = new Array(1:"tim",2:"kim",3:"jim")',
+            'var txt = new Array:1=("tim")2=("kim")3=("jim")',
+            'var txt = new Array("tim","kim","jim")',
+            'var txt = new Array="tim","kim","jim"',
+        ],
+        answer: 'var txt = new Array(1:"tim",2:"kim",3:"jim")'
+    }
 ]
 
-
+// starts the quiz
 submitButton.addEventListener('click', startQuiz);
 
 function startQuiz(event) {
     event.preventDefault();
+
+    // starts a pre-quiz instructional page
     getReady();
 
 }
 
-
+// main function for rendering the quiz and recording the user answer
 function runQuiz() {
     var currentQuestion = quizQuestions[questionNumber] 
     var title = document.createElement("h2")
@@ -67,6 +105,7 @@ function runQuiz() {
         quizDisplay.append(choice)
     }
  
+    // fuction for what happens when the user clicks on an answer
     function userClick(choice) {
         var element = choice.target
         console.log("element", element)
@@ -94,43 +133,19 @@ function runQuiz() {
 
 }
 
-
+// function for what happens when the time runs out or the user answers all of the questions
 function endQuiz() {
    
     var timeDisplay = document.querySelector(".timeDisplay")
     var inputs = secondsLeft
     
-    var values = JSON.parse(localStorage.getItem('scoreStore') || '{}');
-    var inputs = document.getElementsByName("scoreStore")
+    var values = JSON.parse(localStorage.getItem('scoreStore') || '[]');
 
-    for (let i = 0; i < inputs.length; i++) {
-        var x = inputs[i];
-        x.value = values[i] || '';// stored value if it exists or empty string
-    
-        x.onchange = function() {
-          // assign value to the object above
-          values[i] = this.value;
-          // store updated version of object
-          localStorage.setItem('scoreStore', JSON.stringify(values));
-        }
-      }
-      
     var initials = prompt("Enter your initials to record your highscore")
-    var inputs1 = initials
-    var values1 = JSON.parse(localStorage.getItem('initialsStore') || '{}');
-    var inputs1 = document.getElementsByName("initialsStore")
-
-    for (let i = 0; i < inputs1.length; i++) {
-        var x = inputs1[i];
-        x.value = values1[i] || '';// stored value if it exists or empty string
-    
-        x.onchange = function() {
-          // assign value to the object above
-          values1[i] = this.value;
-          // store updated version of object
-          localStorage.setItem('initialsStore', JSON.stringify(values1));
-        }
-      }
+    var userScore = { score: answersCorrect, initials: initials}
+    console.log(userScore)
+    values.push(userScore)
+    window.localStorage.setItem("scoreStore", JSON.stringify(values));
       
 
 
@@ -149,26 +164,21 @@ function endQuiz() {
     ul.setAttribute("class", "scoreList card-body justify-content-center")
     quizDisplay.appendChild(ul)
     
-    var li = document.createElement("li")
-    li.textContent = localStorage.getItem("initialsStore") + " with a score of " + localStorage.getItem("scoreStore")
-    li.setAttribute("style", "margin:auto; width:70%; text-align:center;")
-    quizDisplay.appendChild(li)
-    
-   
-// first attempt at a for loop for rendering highscores 
-    // for (var i = 0; i < score.length; i++) {
-    //     var li = document.createElement("li")
-    //     var currentScore = storedInitials[i] + " with a score of " + storedScore[i]
-    //     li.textContent = currentScore
-    //     li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
-    //     document.querySelector(".scoreList").appendChild(li)
-    
-    // }
+  
+// for loop for rendering highscores 
+    for (var i = 0; i < values.length; i++) {
+        var li = document.createElement("li")
+        var currentScore = values[i]
+        li.innerHTML = currentScore
+        console.log(currentScore, "currentScore")
+        li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
+        document.querySelector(".scoreList").appendChild(li)
+    }
     
 
 }
 
-// message before quiz starts 
+// introductory message before quiz starts 
 function getReady() {
     var timeLeft = 2;
     hideSubmit()
@@ -216,6 +226,7 @@ function hideSubmit() {
     }
   }
 
+//   function to hide the counter in the navbar
   function hideClock() {
     var x = document.querySelector(".timeDisplay");
     if (x.style.display === "none") {
@@ -225,13 +236,20 @@ function hideSubmit() {
     }
   }
 
+//   function to skip the quiz and go directly to the highscores 
   function showHigh() {
 
         var timeDisplay = document.querySelector(".timeDisplay")
+        var values = JSON.parse(localStorage.getItem('scoreStore') || '[]');
+
+    
+    window.localStorage.setItem("scoreStore", JSON.stringify(values));
+     
+        
         document.querySelector(".quizBox").innerHTML = "";
         document.querySelector(".timeDisplay").innerHTML = "Time:";
         hideClock() 
-        hideSubmit()
+    
         var h2 = document.createElement("h2")
         h2.textContent = "The highscores are: " 
         h2.setAttribute("class", "card-title justify-content-center")
@@ -243,9 +261,15 @@ function hideSubmit() {
         ul.setAttribute("class", "scoreList card-body justify-content-center")
         quizDisplay.appendChild(ul)
         
+       
+    // for loop for rendering highscores 
+    for (var i = 0; i < values.length; i++) {
         var li = document.createElement("li")
-        li.textContent = localStorage.getItem("initials") + " with a score of " + localStorage.getItem("endTime")
-        li.setAttribute("style", "margin:auto; width:70%; text-align:center;")
-        quizDisplay.appendChild(li)
-    
-  }
+        var currentScore = values.initials[i] + " with a score of " + values.score[i]
+        li.textContent = currentScore
+        li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
+        document.querySelector(".scoreList").appendChild(li)
+    }
+        hideClock()
+        hideSubmit()
+}
