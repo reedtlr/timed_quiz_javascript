@@ -230,9 +230,9 @@ function endQuiz() {
 
 // introductory message before quiz starts 
 function getReady() {
-    var timeLeft = 4;
+    var timeLeft = 6;
     hideSubmit()
-    headerEl.textContent = "You have 90 seconds to complete this quiz. The faster you complete the quiz, the higher your score."
+    headerEl.textContent = "You have 90 seconds to complete this quiz. The faster you complete the quiz, the higher your score. An incorrect answer will deduct 5 seconds. Your final score is your remaining time plus the number of correct answers"
     headerEl.setAttribute("style", "margin:auto; width:50%; text-align:center;")
     quizDisplay.append(headerEl)
 
@@ -300,7 +300,8 @@ function hideSubmit() {
         document.querySelector(".quizBox").innerHTML = "";
         document.querySelector(".timeDisplay").innerHTML = "Time:";
         hideClock() 
-    
+        hideSubmit()
+
         var h2 = document.createElement("h2")
         h2.textContent = "The highscores are: " 
         h2.setAttribute("class", "card-title justify-content-center")
