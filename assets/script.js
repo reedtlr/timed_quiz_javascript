@@ -192,12 +192,11 @@ function endQuiz() {
     var values = JSON.parse(localStorage.getItem('scoreStore') || '[]');
 
     var initials = prompt("Enter your initials to record your highscore")
-    var userScore = { score: answersCorrect, initials: initials}
+    var userScore = { score: inputs + answersCorrect, initials: initials}
     console.log(userScore)
     values.push(userScore)
     window.localStorage.setItem("scoreStore", JSON.stringify(values));
-      
-
+  
 
     document.querySelector(".quizBox").innerHTML = "";
     document.querySelector(".timeDisplay").innerHTML = "Time:";
@@ -214,11 +213,12 @@ function endQuiz() {
     ul.setAttribute("class", "scoreList card-body justify-content-center")
     quizDisplay.appendChild(ul)
     
-  
+    // recall results from localstorage to run through loop 
+    var results = JSON.parse(localStorage.getItem('scoreStore'));
 // for loop for rendering highscores 
-    for (var i = 0; i < values.length; i++) {
+    for (var i = 0; i < results.length; i++) {
         var li = document.createElement("li")
-        var currentScore = values[i]
+        var currentScore = "The score of " + results[i].score + " was achieved by " + results[i].initials 
         li.innerHTML = currentScore
         console.log(currentScore, "currentScore")
         li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
@@ -230,7 +230,7 @@ function endQuiz() {
 
 // introductory message before quiz starts 
 function getReady() {
-    var timeLeft = 2;
+    var timeLeft = 4;
     hideSubmit()
     headerEl.textContent = "You have 90 seconds to complete this quiz. The faster you complete the quiz, the higher your score."
     headerEl.setAttribute("style", "margin:auto; width:50%; text-align:center;")
@@ -253,7 +253,7 @@ function getReady() {
   }
 
 // timer display funciton for quiz 
-function startClock() {
+function startClock(event) {
     var timerInterval = setInterval(function() {
       secondsLeft--;
       timeDisplay.textContent = "Time: " + secondsLeft + " seconds remaining";
@@ -261,6 +261,7 @@ function startClock() {
       if(secondsLeft === 0) {
         endQuiz();
         clearInterval(timerInterval);
+        event.stopPropagation()
       }
   
     }, 1000);
@@ -311,15 +312,16 @@ function hideSubmit() {
         ul.setAttribute("class", "scoreList card-body justify-content-center")
         quizDisplay.appendChild(ul)
         
-       
-    // for loop for rendering highscores 
-    for (var i = 0; i < values.length; i++) {
-        var li = document.createElement("li")
-        var currentScore = values.initials[i] + " with a score of " + values.score[i]
-        li.textContent = currentScore
-        li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
-        document.querySelector(".scoreList").appendChild(li)
-    }
-        hideClock()
-        hideSubmit()
+        //  recall results from local storage 
+        var results = JSON.parse(localStorage.getItem('scoreStore'));
+        // for loop for rendering highscores 
+            for (var i = 0; i < results.length; i++) {
+                var li = document.createElement("li")
+                var currentScore = "The score of " + results[i].score + " was achieved by " + results[i].initials 
+                li.innerHTML = currentScore
+                console.log(currentScore, "currentScore")
+                li.setAttribute("style", "margin:auto; width:30%; text-align:center;")
+                document.querySelector(".scoreList").appendChild(li)
+            }
+            
 }
