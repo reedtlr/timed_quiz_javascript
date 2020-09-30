@@ -94,7 +94,7 @@ quizQuestions = [
       ],
       answer: "Eval",
     },
-    [
+    {
       title: "Using _______ statement is how you test for a specific condition.",
       choices: [
         "Select",
@@ -103,8 +103,8 @@ quizQuestions = [
         "For",
       ],
       answer: "If",
-    ],
-    [
+    },
+    {
       title: "Which of the following is the structure of an if statement?",
       choices: [
         "if (conditional expression is true) thenexecute this codeend if",
@@ -113,7 +113,7 @@ quizQuestions = [
         "if (conditional expression is true) then {execute this code}",
       ],
       answer: "if (conditional expression is true)   {then execute this code>->}",
-    ],
+    },
     {
       title: "How to create a Date object in JavaScript?",
       choices: [
