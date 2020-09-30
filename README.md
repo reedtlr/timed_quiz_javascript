@@ -13,4 +13,4 @@ This is a quiz written in vanilla javascript with a count down clock, a 5 second
 ## Technologies
 Project is created with:
 * HTML5, CSS3, Javascript
-![Image of the website](https://reedtlr.github.io/timed_quiz_javascript/Assets/demo.png)
+![Image of the website](https://reedtlr.github.io/timed_quiz_javascript/assets/demo.png)
