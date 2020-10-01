@@ -147,7 +147,7 @@ function runQuiz() {
     for (var i = 0; i < currentQuestion.choices.length; i++) {
         var choice = document.createElement("button");
         choice.setAttribute("class", "btn btn-info");
-        choice.setAttribute("style", "margin:auto; width:30%; text-align:center;");
+        choice.setAttribute("style", "margin:auto; margin-top:0.5rem; width:30%; text-align:center;");
         choice.setAttribute("value", currentQuestion.choices[i]);
         choice.textContent = currentQuestion.choices[i];
         var answerC = currentQuestion.answer[i]
